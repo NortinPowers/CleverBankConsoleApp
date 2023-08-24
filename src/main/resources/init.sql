@@ -21,46 +21,62 @@ create table users
     patronymic   varchar(80)
 );
 
+create table currency
+(
+    id   bigint default nextval('"Currency_id_seq"'::regclass) not null
+        constraint currency_pk
+            primary key,
+    code varchar(10)                                           not null
+);
+
 create table bank_accounts
 (
-    id                bigint default nextval('clever_bank_accounts_id_seq'::regclass)      not null
+    id                bigserial
         constraint bank_accounts_pk
             primary key,
-    balance           numeric                                                              not null,
-    currency          money                                                                not null,
-    account_open_date date                                                                 not null,
-    user_id           bigint default nextval('clever_bank_accounts_user_id_seq'::regclass) not null
+    balance           numeric not null,
+    account_open_date date    not null,
+    user_id           bigserial
         constraint bank_accounts_users_id_fk
             references users
             on update cascade on delete cascade,
-    bank_id           bigint                                                               not null
+    bank_id           bigserial
         constraint bank_accounts_banks_id_fk
             references banks
+            on update cascade on delete cascade,
+    number            bigint  not null,
+    currency_id       bigint  not null
+        constraint bank_accounts_currency_id_fk
+            references currency
             on update cascade on delete cascade
 );
 
-create table transactionals
+create table transactions
 (
     id                        bigserial
-        constraint transactionals_pk
+        constraint transactions_pk
             primary key,
     date                      date        not null,
-    currency                  money       not null,
     monies                    numeric     not null,
     operation_type            varchar(40) not null,
-    sending_bank_id           bigint
-        constraint transactionals_banks_id_fk
+    sending_bank_id           bigserial
+        constraint transactions_banks_id_fk
             references banks
             on update cascade on delete cascade,
-    sending_bank_account_id   bigint      not null
-        constraint transactionals_bank_accounts_id_fk
-            references bank_accounts,
-    repitient_bank_id         bigint      not null
-        constraint transactionals_banks_id_fk2
-            references banks
-            on update cascade on delete cascade,
-    repitient_bank_account_id bigint      not null
-        constraint transactionals_bank_accounts_id_fk2
+    sending_bank_account_id   bigserial
+        constraint transactions_bank_accounts_id_fk
             references bank_accounts
+            on update cascade on delete cascade,
+    recipient_bank_id         bigserial
+        constraint transactions_banks_id_fk2
+            references banks
+            on update cascade on delete cascade,
+    recipient_bank_account_id bigserial
+        constraint transactions_bank_accounts_id_fk2
+            references bank_accounts
+            on update cascade on delete cascade,
+    currency_id               bigint      not null
+        constraint transactions_currency_id_fk
+            references currency
             on update cascade on delete cascade
 );
