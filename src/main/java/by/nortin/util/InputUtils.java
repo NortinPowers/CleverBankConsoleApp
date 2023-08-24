@@ -19,15 +19,25 @@ public class InputUtils {
     }
 
     public static BigDecimal readBigDecimalFromConsole(String message) {
-        System.out.println(message + " and press Enter:");
         BigDecimal value = BigDecimal.ZERO;
-        try {
-            value = new BigDecimal(SCANNER.next().toLowerCase());
-        } catch (NumberFormatException e) {
-            System.out.println("Incorrect value entered");
-            readBigDecimalFromConsole(message);
-        }
+        do {
+            System.out.println(message + " and press Enter:");
+            try {
+                value = new BigDecimal(SCANNER.next().toLowerCase());
+            } catch (NumberFormatException e) {
+                System.out.println("Incorrect value entered");
+                readBigDecimalFromConsole(message);
+            }
+        } while (isNotCorrectBigDecimalValue(value));
         return value;
+    }
+
+    private static boolean isNotCorrectBigDecimalValue(BigDecimal value) {
+        boolean condition = value.compareTo(BigDecimal.ZERO) == 0 || value.compareTo(BigDecimal.ZERO) < 0;
+        if (condition) {
+            System.out.println("Incorrect input data.");
+        }
+        return condition;
     }
 
     public static void waitEnterKeyPressed() {
@@ -49,9 +59,10 @@ public class InputUtils {
     }
 
     private static boolean isNotInBounds(int number, int bound) {
-        if (number < 1 || number > bound) {
+        boolean condition = number < 1 || number > bound;
+        if (condition) {
             System.out.println("Incorrect input data.");
         }
-        return number < 1 || number > bound;
+        return condition;
     }
 }

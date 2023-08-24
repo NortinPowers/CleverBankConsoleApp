@@ -1,5 +1,7 @@
 package by.nortin.util;
 
+import by.nortin.repository.UserRepository;
+import by.nortin.repository.impl.UserRepositoryImpl;
 import by.nortin.service.UserService;
 import by.nortin.service.impl.UserServiceImpl;
 import java.util.Map;
@@ -27,6 +29,8 @@ public class InjectObjectsFactory {
     private static <T> Object createInstance(Class<T> serviceClass) {
         if (UserService.class == serviceClass) {
             return new UserServiceImpl();
+        } else if (UserRepository.class == serviceClass) {
+            return new UserRepositoryImpl();
         }
 //        } else if (OrderService.class == serviceClass) {
 //            return new OrderServiceImpl();
