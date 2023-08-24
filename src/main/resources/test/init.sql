@@ -21,10 +21,10 @@ create table users
     patronymic   varchar(80)
 );
 
-create table currency
+create table currencies
 (
     id   bigint default nextval('"Currency_id_seq"'::regclass) not null
-        constraint currency_pk
+        constraint currencies_pk
             primary key,
     code varchar(10)                                           not null
 );
@@ -46,8 +46,8 @@ create table bank_accounts
             on update cascade on delete cascade,
     number            bigint  not null,
     currency_id       bigint  not null
-        constraint bank_accounts_currency_id_fk
-            references currency
+        constraint bank_accounts_currencies_id_fk
+            references currencies
             on update cascade on delete cascade
 );
 
@@ -76,7 +76,7 @@ create table transactions
             references bank_accounts
             on update cascade on delete cascade,
     currency_id               bigint      not null
-        constraint transactions_currency_id_fk
-            references currency
+        constraint transactions_currencies_id_fk
+            references currencies
             on update cascade on delete cascade
 );
