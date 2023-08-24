@@ -1,5 +1,6 @@
 package by.nortin.util;
 
+import java.math.BigDecimal;
 import java.util.Scanner;
 import lombok.experimental.UtilityClass;
 
@@ -15,6 +16,18 @@ public class InputUtils {
     public static String readStringFromConsole(String message) {
         System.out.println(message + " and press Enter:");
         return SCANNER.next().toLowerCase();
+    }
+
+    public static BigDecimal readBigDecimalFromConsole(String message) {
+        System.out.println(message + " and press Enter:");
+        BigDecimal value = BigDecimal.ZERO;
+        try {
+            value = new BigDecimal(SCANNER.next().toLowerCase());
+        } catch (NumberFormatException e) {
+            System.out.println("Incorrect value entered");
+            readBigDecimalFromConsole(message);
+        }
+        return value;
     }
 
     public static void waitEnterKeyPressed() {
@@ -37,7 +50,7 @@ public class InputUtils {
 
     private static boolean isNotInBounds(int number, int bound) {
         if (number < 1 || number > bound) {
-            System.out.println("The input is not a positive number.");
+            System.out.println("Incorrect input data.");
         }
         return number < 1 || number > bound;
     }

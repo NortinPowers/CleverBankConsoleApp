@@ -12,10 +12,11 @@ import lombok.Setter;
 public class BankAccount {
 
     private Long id;
+    private Long number;
     private BigDecimal balance;
     private Currency currency;
     private LocalDate accountOpeningDate;
     private User user;
     private Bank bank;
-    private List<Transactional> transactionals;
+    private List<Transactional> transactions;
 }
