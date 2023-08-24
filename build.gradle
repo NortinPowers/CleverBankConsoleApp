@@ -16,6 +16,18 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok:1.18.28'
     implementation 'org.postgresql:postgresql:42.6.0'
     implementation 'org.flywaydb:flyway-core:9.21.1'
+    implementation 'org.apache.logging.log4j:log4j-core:2.20.0'
+    implementation 'org.yaml:snakeyaml:2.1'
+}
+
+tasks.register('run', JavaExec) {
+    classpath = sourceSets.main.runtimeClasspath
+    doFirst {
+        def config = yaml.load(new File('src/main/resources/application.yaml').text)
+        config.each { key, value ->
+            System.setProperty(key, value.toString())
+        }
+    }
 }
 
 test {

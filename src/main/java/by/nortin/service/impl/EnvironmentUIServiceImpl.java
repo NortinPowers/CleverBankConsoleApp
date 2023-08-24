@@ -91,7 +91,7 @@ public class EnvironmentUIServiceImpl implements EnvironmentUIService {
         System.out.println();
         String login = readStringFromConsole("Enter your login");
         String password = readStringFromConsole("Enter your password");
-        if (userService.checkAuthentificate(login, password)) {
+        if (userService.checkAuthentication(login, password)) {
             bankEnvironment.setActiveUser(login);
 //            getStartPageOfSelection();
         } else {

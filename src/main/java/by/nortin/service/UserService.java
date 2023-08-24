@@ -2,5 +2,5 @@ package by.nortin.service;
 
 public interface UserService {
 
-    boolean checkAuthentificate(String login, String password);
+    boolean checkAuthentication(String login, String password);
 }

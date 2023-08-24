@@ -6,19 +6,19 @@ import by.nortin.util.InjectObjectsFactory;
 
 public class UserServiceImpl implements UserService {
 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
     {
         userRepository = (UserRepository) InjectObjectsFactory.getInstance(UserRepository.class);
     }
 
     @Override
-    public boolean checkAuthentificate(String login, String password) {
+    public boolean checkAuthentication(String login, String password) {
         //test
-        if ("nortin".equals(login) && "12345".equals(password)) {
-            return true;
-        }
-
-        return false;
+//        if ("nortin".equals(login) && "12345".equals(password)) {
+//            return true;
+//        }
+//        return false;
+        return userRepository.checkAuthentication(login, password);
     }
 }
