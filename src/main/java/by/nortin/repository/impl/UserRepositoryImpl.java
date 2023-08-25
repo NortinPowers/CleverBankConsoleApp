@@ -1,5 +1,6 @@
 package by.nortin.repository.impl;
 
+import by.nortin.model.User;
 import by.nortin.repository.ConnectionPool;
 import by.nortin.repository.UserRepository;
 import java.sql.Connection;
@@ -18,26 +19,29 @@ public class UserRepositoryImpl implements UserRepository {
     }
 
     @Override
-    public boolean checkAuthentication(String login, String password) {
+//    public boolean checkAuthentication(String login, String password) {
+    public boolean checkAuthentication(User user) {
         boolean isPresent = false;
         Connection connection = null;
         try {
             connection = connectionPool.getConnection();
             PreparedStatement statement = connection.prepareStatement(GET_USER_BY_LOGIN_AND_PASSWORD);
-            statement.setString(1, login);
-            statement.setString(2, password);
+            statement.setString(1, user.getLogin());
+//            statement.setString(1, login);
+            statement.setString(2, user.getPassword());
+//            statement.setString(2, password);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 isPresent = true;
             }
         } catch (Exception e) {
-            log.error("checkAuthentication" + e.getMessage());
+            log.error("checkAuthentication", e);
         } finally {
             if (connectionPool != null) {
                 try {
                     connectionPool.closeConnection(connection);
                 } catch (Exception e) {
-                    log.error("Exception (checkAuthentication.connectionPool): " + e.getMessage());
+                    log.error("Exception (checkAuthentication(),connectionPool.closeConnection()): ", e);
                 }
             }
         }
