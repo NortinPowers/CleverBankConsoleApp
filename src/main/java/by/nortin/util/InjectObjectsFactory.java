@@ -1,8 +1,16 @@
 package by.nortin.util;
 
+import by.nortin.mapper.BankAccountMapper;
+import by.nortin.mapper.UserMapper;
+import by.nortin.mapper.impl.BankAccountMapperImpl;
+import by.nortin.mapper.impl.UserMapperImpl;
+import by.nortin.repository.BankAccountRepository;
 import by.nortin.repository.UserRepository;
+import by.nortin.repository.impl.BankAccountRepositoryImpl;
 import by.nortin.repository.impl.UserRepositoryImpl;
+import by.nortin.service.BankAccountService;
 import by.nortin.service.UserService;
+import by.nortin.service.impl.BankAccountServiceImpl;
 import by.nortin.service.impl.UserServiceImpl;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -27,13 +35,22 @@ public class InjectObjectsFactory {
     }
 
     private static <T> Object createInstance(Class<T> serviceClass) {
+        Object result;
         if (UserService.class == serviceClass) {
-            return new UserServiceImpl();
+            result = new UserServiceImpl();
         } else if (UserRepository.class == serviceClass) {
-            return new UserRepositoryImpl();
+            result = new UserRepositoryImpl();
+        } else if (UserMapper.class == serviceClass) {
+            result = new UserMapperImpl();
+        } else if (BankAccountService.class == serviceClass) {
+            result = new BankAccountServiceImpl();
+        } else if (BankAccountRepository.class == serviceClass) {
+            result = new BankAccountRepositoryImpl();
+        } else if (BankAccountMapper.class == serviceClass) {
+            result = new BankAccountMapperImpl();
+        } else {
+            throw new IllegalArgumentException("Can not create instance of class " + serviceClass);
         }
-//        } else if (OrderService.class == serviceClass) {
-//            return new OrderServiceImpl();
-        throw new IllegalArgumentException("Can not create instance of class " + serviceClass);
+        return result;
     }
 }

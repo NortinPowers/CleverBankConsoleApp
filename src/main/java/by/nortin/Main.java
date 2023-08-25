@@ -1,6 +1,7 @@
 package by.nortin;
 
 import by.nortin.model.CleverBankEnvironment;
+import by.nortin.repository.ConnectionPool;
 import by.nortin.service.CleverBankEnvironmentService;
 import by.nortin.service.EnvironmentUIService;
 import by.nortin.service.impl.CleverBankEnvironmentServiceImpl;
@@ -16,5 +17,6 @@ public class Main {
             environmentUIService.openBankEnvironment();
         }
         System.out.println("Clever Bank is closed");
+        ConnectionPool.getInstance().closeAllConnection();
     }
 }

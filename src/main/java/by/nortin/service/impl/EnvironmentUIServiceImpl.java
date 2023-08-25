@@ -10,18 +10,21 @@ import static by.nortin.util.DrawUIUtils.drawSelectionLine;
 import static by.nortin.util.DrawUIUtils.drawSelectionMenu;
 import static by.nortin.util.DrawUIUtils.drawSelectionOne;
 import static by.nortin.util.DrawUIUtils.drawWelcomeMenu;
+import static by.nortin.util.InjectObjectsFactory.getInstance;
 import static by.nortin.util.InputUtils.readBigDecimalFromConsole;
 import static by.nortin.util.InputUtils.readIntFromConsole;
 import static by.nortin.util.InputUtils.readStringFromConsole;
 import static by.nortin.util.InputUtils.waitEnterKeyPressed;
 
+import by.nortin.dto.BankAccountDto;
+import by.nortin.dto.UserDto;
 import by.nortin.model.Bank;
 import by.nortin.model.BankAccount;
 import by.nortin.model.CleverBankEnvironment;
 import by.nortin.model.User;
+import by.nortin.service.BankAccountService;
 import by.nortin.service.EnvironmentUIService;
 import by.nortin.service.UserService;
-import by.nortin.util.InjectObjectsFactory;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Currency;
@@ -33,6 +36,7 @@ public class EnvironmentUIServiceImpl implements EnvironmentUIService {
 
     private final CleverBankEnvironment bankEnvironment;
     private final UserService userService;
+    private final BankAccountService bankAccountService;
 
     //test
     private final List<BankAccount> bankAccounts;
@@ -65,7 +69,8 @@ public class EnvironmentUIServiceImpl implements EnvironmentUIService {
 
     public EnvironmentUIServiceImpl(CleverBankEnvironment bankEnvironment) {
         this.bankEnvironment = bankEnvironment;
-        this.userService = (UserService) InjectObjectsFactory.getInstance(UserService.class);
+        this.userService = (UserService) getInstance(UserService.class);
+        this.bankAccountService = (BankAccountService) getInstance(BankAccountService.class);
     }
 
     @Override
@@ -91,7 +96,10 @@ public class EnvironmentUIServiceImpl implements EnvironmentUIService {
         System.out.println();
         String login = readStringFromConsole("Enter your login");
         String password = readStringFromConsole("Enter your password");
-        if (userService.checkAuthentication(login, password)) {
+//        UserDto userDto = createUserDto(login, password);
+        UserDto userDto = new UserDto(login, password);
+//        if (userService.checkAuthentication(login, password)) {
+        if (userService.checkAuthentication(userDto)) {
             bankEnvironment.setActiveUser(login);
 //            getStartPageOfSelection();
         } else {
@@ -150,14 +158,19 @@ public class EnvironmentUIServiceImpl implements EnvironmentUIService {
                 drawBankAccountSelection();
 
                 //db method
-//                List<BankAccount> bankAccounts = getUserBankAccounts(bankEnvironment.getActiveUser());
+                List<BankAccountDto> bankAccountDtos = bankAccountService.getUserBankAccounts(bankEnvironment.getActiveUser());
 
-                displayBankAccountsSelection(bankAccounts);
-                int size = bankAccounts.size();
+                displayBankAccountsSelection(bankAccountDtos);
+//                int size = bankAccounts.size();
+                int size = bankAccountDtos.size();
                 int numberPoint = readIntFromConsole(TEXT_READ_INT_FROM_CONSOLE + size, size);
-                Long bankAccountNumber = bankAccounts.get(numberPoint - 1).getNumber();
+                Long bankAccountNumber = bankAccountDtos.get(numberPoint - 1).getNumber();
+//                Long bankAccountNumber = bankAccounts.get(numberPoint - 1).getNumber();
 
                 BigDecimal depositedMoney = readBigDecimalFromConsole("Enter the amount to be deposited");
+
+                //db method
+                //TODO
 
                 BigDecimal updatedBalance = topUpBankAccount(bankAccountNumber, depositedMoney);
 
@@ -196,13 +209,15 @@ public class EnvironmentUIServiceImpl implements EnvironmentUIService {
         return balance;
     }
 
-    private void displayBankAccountsSelection(List<BankAccount> bankAccounts) {
+    //    private void displayBankAccountsSelection(List<BankAccount> bankAccounts) {
+    private void displayBankAccountsSelection(List<BankAccountDto> bankAccountDtos) {
         int menuPoint;
-        for (int i = 0; i < bankAccounts.size(); i++) {
+        BankAccountDto bankAccountDto;
+        for (int i = 0; i < bankAccountDtos.size(); i++) {
             menuPoint = i + 1;
-            drawSelectionLine(menuPoint, bankAccounts.get(i).getNumber());
+            bankAccountDto = bankAccountDtos.get(i);
+            drawSelectionLine(menuPoint, bankAccountDto.getNumber(), bankAccountDto.getCurrency());
         }
-//        bankAccounts.forEach(bankAccount -> drawSelectionLine(bankAccount.getNumber()));
     }
 
     private void getSelectedOneSome() {

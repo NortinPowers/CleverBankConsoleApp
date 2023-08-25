@@ -1,10 +1,13 @@
 package by.nortin.util;
 
 import java.io.IOException;
+import java.util.Currency;
 import lombok.experimental.UtilityClass;
+import lombok.extern.log4j.Log4j2;
 
 @SuppressWarnings("checkstyle:AbbreviationAsWordInName")
 @UtilityClass
+@Log4j2
 public class DrawUIUtils {
 
     private static final String BORDER;
@@ -85,8 +88,8 @@ public class DrawUIUtils {
         System.out.println(BORDER);
     }
 
-    public static void drawSelectionLine(Integer index, Long number) {
-        System.out.println(index + " - " + number);
+    public static void drawSelectionLine(Integer index, Long number, Currency currency) {
+        System.out.println(index + " - " + number + " (" + currency.getCurrencyCode() + ")");
     }
 
     //for commandLine
@@ -103,9 +106,9 @@ public class DrawUIUtils {
             } else {
                 Runtime.getRuntime().exec("clear");
             }
-        } catch (IOException | InterruptedException ex) {
-            //to log
-            System.out.println("Ooooooo! clearConsoleException");
+        } catch (IOException | InterruptedException e) {
+            log.error("Exception clearConsole()", e);
+//            System.out.println("Ooooooo! clearConsoleException");
         }
     }
 }
