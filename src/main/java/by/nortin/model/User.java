@@ -6,9 +6,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class User {
+public class User extends BaseModel {
 
-    private Long id;
+    //    private Long id;
     private String passportId;
     private String login;
     private String password;

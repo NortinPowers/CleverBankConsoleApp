@@ -8,9 +8,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class Transactional {
+public class Transactional extends BaseModel {
 
-    private Long id;
+    //    private Long id;
     private LocalDate date;
     private Currency currency;
     private BigDecimal monies;
