@@ -6,3 +6,7 @@ database:
   username: postgres
   password: root
   driver-class-name: org.postgresql.Driver
+  max-connection: 30
+  min-connection: 10
+
+profiles: en
