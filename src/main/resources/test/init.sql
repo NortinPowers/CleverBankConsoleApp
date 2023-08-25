@@ -23,7 +23,7 @@ create table users
 
 create table currencies
 (
-    id   bigint default nextval('"Currency_id_seq"'::regclass) not null
+    id   bigserial
         constraint currencies_pk
             primary key,
     code varchar(10)                                           not null
