@@ -7,6 +7,7 @@ import by.nortin.mapper.BankAccountMapper;
 import by.nortin.model.BankAccount;
 import by.nortin.repository.BankAccountRepository;
 import by.nortin.service.BankAccountService;
+import java.math.BigDecimal;
 import java.util.List;
 
 public class BankAccountServiceImpl implements BankAccountService {
@@ -25,5 +26,10 @@ public class BankAccountServiceImpl implements BankAccountService {
         return userBankAccounts.stream()
                 .map(bankAccountMapper::convertToDto)
                 .toList();
+    }
+
+    @Override
+    public BigDecimal topUpBankAccount(Long bankAccountNumber, BigDecimal depositedMoney) {
+        return bankAccountRepository.topUpBankAccount(bankAccountNumber, depositedMoney);
     }
 }
