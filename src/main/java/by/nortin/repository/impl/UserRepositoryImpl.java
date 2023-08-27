@@ -11,18 +11,20 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class UserRepositoryImpl implements UserRepository {
 
-    private static final String GET_USER_BY_LOGIN_AND_PASSWORD = "select * from users where login=? and password=?";
+    private static final String GET_USER_BY_LOGIN_AND_PASSWORD = "select * from users where login=? and password = ?";
     private final ConnectionPool connectionPool;
+    private Connection connection;
 
     {
         connectionPool = ConnectionPool.getInstance();
+        connection = null;
     }
 
     @Override
 //    public boolean checkAuthentication(String login, String password) {
     public boolean checkAuthentication(User user) {
         boolean isPresent = false;
-        Connection connection = null;
+//        Connection connection = null;
         try {
             connection = connectionPool.getConnection();
             PreparedStatement statement = connection.prepareStatement(GET_USER_BY_LOGIN_AND_PASSWORD);
@@ -35,7 +37,7 @@ public class UserRepositoryImpl implements UserRepository {
                 isPresent = true;
             }
         } catch (Exception e) {
-            log.error("checkAuthentication", e);
+            log.error("checkAuthentication()", e);
         } finally {
             if (connectionPool != null) {
                 try {

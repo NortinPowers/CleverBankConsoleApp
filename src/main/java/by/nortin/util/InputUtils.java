@@ -40,8 +40,8 @@ public class InputUtils {
         return condition;
     }
 
-    public static void waitEnterKeyPressed() {
-        System.out.println("***               Press ENTER to continue                ***");
+    public static void waitQKeyPressed() {
+        System.out.println("***               Press Q and ENTER to continue                ***");
         SCANNER.next();
     }
 

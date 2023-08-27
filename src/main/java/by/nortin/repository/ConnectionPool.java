@@ -32,7 +32,7 @@ public final class ConnectionPool {
 //        LOGIN = resourceBundle.getString(DB_LOGIN);
 //        PASS = resourceBundle.getString(DB_PASS);
 
-//        URL = "jdbc:postgresql://localhost:5432/clever_bank";
+//        URL = "jdbc:postgresql://localhost:5434/clever_bank";
 //        LOGIN = "postgres";
 //        PASS = "root";
 

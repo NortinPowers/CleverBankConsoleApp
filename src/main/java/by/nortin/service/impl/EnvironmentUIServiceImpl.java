@@ -3,6 +3,7 @@ package by.nortin.service.impl;
 import static by.nortin.util.Constants.TEXT_READ_INT_FROM_CONSOLE;
 import static by.nortin.util.DrawUIUtils.drawAuthenticateRequest;
 import static by.nortin.util.DrawUIUtils.drawBankAccountSelection;
+import static by.nortin.util.DrawUIUtils.drawEmptyForSelectionLine;
 import static by.nortin.util.DrawUIUtils.drawErrorAuthenticateRequest;
 import static by.nortin.util.DrawUIUtils.drawGreetingUser;
 import static by.nortin.util.DrawUIUtils.drawReplenishmentBalanceSelection;
@@ -14,16 +15,20 @@ import static by.nortin.util.InjectObjectsFactory.getInstance;
 import static by.nortin.util.InputUtils.readBigDecimalFromConsole;
 import static by.nortin.util.InputUtils.readIntFromConsole;
 import static by.nortin.util.InputUtils.readStringFromConsole;
-import static by.nortin.util.InputUtils.waitEnterKeyPressed;
+import static by.nortin.util.InputUtils.waitQKeyPressed;
 
 import by.nortin.dto.BankAccountDto;
+import by.nortin.dto.TransactionDto;
 import by.nortin.dto.UserDto;
 import by.nortin.model.Bank;
 import by.nortin.model.BankAccount;
 import by.nortin.model.CleverBankEnvironment;
+import by.nortin.model.OperationType;
 import by.nortin.model.User;
 import by.nortin.service.BankAccountService;
 import by.nortin.service.EnvironmentUIService;
+import by.nortin.service.ReceiptSavingService;
+import by.nortin.service.TransactionService;
 import by.nortin.service.UserService;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -37,6 +42,8 @@ public class EnvironmentUIServiceImpl implements EnvironmentUIService {
     private final CleverBankEnvironment bankEnvironment;
     private final UserService userService;
     private final BankAccountService bankAccountService;
+    private final TransactionService transactionService;
+    private final ReceiptSavingService receiptSavingService;
 
     //test
     private final List<BankAccount> bankAccounts;
@@ -71,6 +78,8 @@ public class EnvironmentUIServiceImpl implements EnvironmentUIService {
         this.bankEnvironment = bankEnvironment;
         this.userService = (UserService) getInstance(UserService.class);
         this.bankAccountService = (BankAccountService) getInstance(BankAccountService.class);
+        this.transactionService = (TransactionService) getInstance(TransactionService.class);
+        this.receiptSavingService = (ReceiptSavingService) getInstance(ReceiptSavingService.class);
     }
 
     @Override
@@ -125,22 +134,22 @@ public class EnvironmentUIServiceImpl implements EnvironmentUIService {
 //                sortingPage();
             case 2 -> {
                 System.out.println("its 2!!!");
-                waitEnterKeyPressed();
+                waitQKeyPressed();
             }
 //                addProductPage();
             case 3 -> {
                 System.out.println("its 3!!!");
-                waitEnterKeyPressed();
+                waitQKeyPressed();
             }
 //                editProductPage();
             case 4 -> {
                 System.out.println("its 4!!!");
-                waitEnterKeyPressed();
+                waitQKeyPressed();
             }
 //                deleteProductPage();
             case 5 -> {
                 System.out.println("its 5!!!");
-                waitEnterKeyPressed();
+                waitQKeyPressed();
             }
 //                service.closeShop();
         }
@@ -151,34 +160,69 @@ public class EnvironmentUIServiceImpl implements EnvironmentUIService {
         drawWelcomeMenu();
         drawGreetingUser(bankEnvironment.getActiveUser());
         drawReplenishmentBalanceSelection();
-        int bound = 2;
-        int menuPoint = readIntFromConsole(TEXT_READ_INT_FROM_CONSOLE + bound, bound);
+        int menuPoint = getMenuPoint(2);
         switch (menuPoint) {
             case 1 -> {
                 drawBankAccountSelection();
-
-                //db method
                 List<BankAccountDto> bankAccountDtos = bankAccountService.getUserBankAccounts(bankEnvironment.getActiveUser());
+                if (bankAccountDtos.isEmpty()) {
+                    drawEmptyForSelectionLine();
+                    waitQKeyPressed();
+                } else {
+                    displayBankAccountsSelection(bankAccountDtos);
+                    int numberPoint = getMenuPoint(bankAccountDtos.size());
+                    BankAccountDto bankAccountDto = bankAccountDtos.get(numberPoint - 1);
+                    Long bankAccountNumber = bankAccountDto.getNumber();
+                    BigDecimal depositedMoney = readBigDecimalFromConsole("Enter the amount to be deposited to the account " + bankAccountNumber);
+                    BigDecimal updatedBalance = bankAccountService.topUpBankAccount(bankAccountNumber, depositedMoney);
 
-                displayBankAccountsSelection(bankAccountDtos);
-//                int size = bankAccounts.size();
-                int size = bankAccountDtos.size();
-                int numberPoint = readIntFromConsole(TEXT_READ_INT_FROM_CONSOLE + size, size);
-                Long bankAccountNumber = bankAccountDtos.get(numberPoint - 1).getNumber();
-//                Long bankAccountNumber = bankAccounts.get(numberPoint - 1).getNumber();
+                    //db transaction
+//                    OperationType replenishment = OperationType.REPLENISHMENT;
+//                    TransactionDto transactionDto = transactionService.saveTransaction(
+//                            replenishment,
+//                            bankAccountDto.getBank().getName(),
+//                            null,
+//                            bankAccountDto.getNumber(),
+//                            null,
+//                            depositedMoney);
 
-                BigDecimal depositedMoney = readBigDecimalFromConsole("Enter the amount to be deposited");
+//                    TransactionDto transactionDto = new TransactionDto(
+//                            LocalDate.now(),
+//                            bankAccountDto.getCurrencyId(),
+//                            bankAccountDto.getCurrency(),
+//                            depositedMoney,
+//                            replenishment,
+//                            bankAccountDto.getBankDto(),
+//                            bankAccountDto,
+//                            null,
+//                            null);
 
-                //db method
-                //TODO
+                    TransactionDto transactionDto = TransactionDto.builder()
+                            .currencyId(bankAccountDto.getCurrencyId())
+                            .currency(bankAccountDto.getCurrency())
+                            .monies(depositedMoney)
+                            .operationType(OperationType.REPLENISHMENT)
+                            .sendingBankDto(bankAccountDto.getBankDto())
+                            .sendingBankAccountDto(bankAccountDto)
+                            .build();
 
-                BigDecimal updatedBalance = topUpBankAccount(bankAccountNumber, depositedMoney);
+                    TransactionDto savedTransaction = transactionService.saveTransaction(transactionDto);
 
-                showResult(bankAccountNumber, updatedBalance);
+                    receiptSavingService.saveReceipt(savedTransaction);
+
+                    showResult(bankAccountNumber, updatedBalance);
+                    waitQKeyPressed();
+                }
+
             }
 //                sortingPage();
             case 2 -> System.out.println("go home!!!");
         }
+    }
+
+    private static int getMenuPoint(int bound) {
+        int menuPoint = readIntFromConsole(TEXT_READ_INT_FROM_CONSOLE + bound, bound);
+        return menuPoint;
     }
 
     private void showResult(Long bankAccountNumber, BigDecimal updatedBalance) {
@@ -230,7 +274,7 @@ public class EnvironmentUIServiceImpl implements EnvironmentUIService {
         switch (menuPoint) {
             case 1 -> {
                 System.out.println("its 1!!!");
-                waitEnterKeyPressed();
+                waitQKeyPressed();
             }
 //                sortingPage();
             case 2 -> System.out.println("go home!!!");

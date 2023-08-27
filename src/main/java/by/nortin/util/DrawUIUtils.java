@@ -88,6 +88,10 @@ public class DrawUIUtils {
         System.out.println(BORDER);
     }
 
+    public static void drawEmptyForSelectionLine() {
+        System.out.println("Nothing selection");
+    }
+
     public static void drawSelectionLine(Integer index, Long number, Currency currency) {
         System.out.println(index + " - " + number + " (" + currency.getCurrencyCode() + ")");
     }
