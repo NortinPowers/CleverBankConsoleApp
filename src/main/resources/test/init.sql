@@ -29,54 +29,118 @@ create table currencies
     code varchar(10)                                           not null
 );
 
-create table bank_accounts
-(
-    id                bigserial
-        constraint bank_accounts_pk
-            primary key,
-    balance           numeric not null,
-    account_open_date date    not null,
-    user_id           bigserial
-        constraint bank_accounts_users_id_fk
-            references users
-            on update cascade on delete cascade,
-    bank_id           bigserial
-        constraint bank_accounts_banks_id_fk
-            references banks
-            on update cascade on delete cascade,
-    number            bigint  not null,
-    currency_id       bigint  not null
-        constraint bank_accounts_currencies_id_fk
-            references currencies
-            on update cascade on delete cascade
-);
+-- uses banks_account_tables_for_various_bank.sql
+
+-- create table bank_accounts
+-- (
+--     id                bigserial
+--         constraint bank_accounts_pk
+--             primary key,
+--     balance           numeric not null,
+--     account_open_date date    not null,
+--     user_id           bigserial
+--         constraint bank_accounts_users_id_fk
+--             references users
+--             on update cascade on delete cascade,
+--     bank_id           bigserial
+--         constraint bank_accounts_banks_id_fk
+--             references banks
+--             on update cascade on delete cascade,
+--     number            bigint  not null,
+--     currency_id       bigint  not null
+--         constraint bank_accounts_currencies_id_fk
+--             references currencies
+--             on update cascade on delete cascade
+-- );
+
+-- create table transactions
+-- (
+--     id                        bigserial
+--         constraint transactions_pk
+--             primary key,
+--     date                      date        not null,
+--     monies                    numeric     not null,
+--     operation_type            varchar(40) not null,
+--     sending_bank_id           bigserial
+--         constraint transactions_banks_id_fk
+--             references banks
+--             on update cascade on delete cascade,
+--     sending_bank_account_id   bigserial
+--         constraint transactions_bank_accounts_id_fk
+--             references bank_accounts
+--             on update cascade on delete cascade,
+--     recipient_bank_id         bigserial
+--         constraint transactions_banks_id_fk2
+--             references banks
+--             on update cascade on delete cascade,
+--     recipient_bank_account_id bigserial
+--         constraint transactions_bank_accounts_id_fk2
+--             references bank_accounts
+--             on update cascade on delete cascade,
+--     currency_id               bigint      not null
+--         constraint transactions_currencies_id_fk
+--             references currencies
+--             on update cascade on delete cascade
+-- );
+
+-- create table transactions
+-- (
+--     id                        bigserial
+--         constraint transactions_pk
+--             primary key,
+--     date                      date    not null,
+--     monies                    numeric not null,
+--     sending_bank_id           bigserial
+--         constraint transactions_banks_id_fk
+--             references banks
+--             on update cascade on delete cascade,
+--     sending_bank_account_id   bigserial
+--         constraint transactions_bank_accounts_id_fk
+--             references bank_accounts
+--             on update cascade on delete cascade,
+--     recipient_bank_id         bigserial
+--         constraint transactions_banks_id_fk2
+--             references banks
+--             on update cascade on delete cascade,
+--     recipient_bank_account_id bigserial
+--         constraint transactions_bank_accounts_id_fk2
+--             references bank_accounts
+--             on update cascade on delete cascade,
+--     currency_id               bigint  not null
+--         constraint transactions_currencies_id_fk
+--             references currencies
+--             on update cascade on delete cascade,
+--     operation_type_id         bigserial
+--         constraint transactions_operation_types_id_fk
+--             references operation_types
+--             on update cascade on delete cascade
+-- );
+
+-- bank_account_id fk??
 
 create table transactions
 (
     id                        bigserial
         constraint transactions_pk
             primary key,
-    date                      date        not null,
-    monies                    numeric     not null,
-    operation_type            varchar(40) not null,
+    date                      date    not null,
+    monies                    numeric not null,
     sending_bank_id           bigserial
         constraint transactions_banks_id_fk
             references banks
             on update cascade on delete cascade,
-    sending_bank_account_id   bigserial
-        constraint transactions_bank_accounts_id_fk
-            references bank_accounts
-            on update cascade on delete cascade,
+    sending_bank_account_id   bigserial,
     recipient_bank_id         bigserial
         constraint transactions_banks_id_fk2
             references banks
             on update cascade on delete cascade,
-    recipient_bank_account_id bigserial
-        constraint transactions_bank_accounts_id_fk2
-            references bank_accounts
-            on update cascade on delete cascade,
-    currency_id               bigint      not null
+    recipient_bank_account_id bigserial,
+    currency_id               bigint  not null
         constraint transactions_currencies_id_fk
             references currencies
+            on update cascade on delete cascade,
+    operation_type_id         bigserial
+        constraint transactions_operation_types_id_fk
+            references operation_types
             on update cascade on delete cascade
 );
