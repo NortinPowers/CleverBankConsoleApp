@@ -37,13 +37,13 @@ public class UserRepositoryImpl implements UserRepository {
                 isPresent = true;
             }
         } catch (Exception e) {
-            log.error("checkAuthentication()", e);
+            log.error("Exception checkAuthentication()", e);
         } finally {
             if (connectionPool != null) {
                 try {
                     connectionPool.closeConnection(connection);
                 } catch (Exception e) {
-                    log.error("Exception (checkAuthentication(),connectionPool.closeConnection()): ", e);
+                    log.error("Exception checkAuthentication().connectionPool.closeConnection(): ", e);
                 }
             }
         }

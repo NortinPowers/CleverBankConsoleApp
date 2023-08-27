@@ -3,10 +3,8 @@ package by.nortin.mapper.impl;
 import by.nortin.dto.BankAccountDto;
 import by.nortin.mapper.BankAccountMapper;
 import by.nortin.mapper.BankMapper;
-import by.nortin.model.Bank;
 import by.nortin.model.BankAccount;
 import by.nortin.util.InjectObjectsFactory;
-import by.nortin.util.MapperUtils;
 import org.modelmapper.ModelMapper;
 
 public class BankAccountMapperImpl implements BankAccountMapper {

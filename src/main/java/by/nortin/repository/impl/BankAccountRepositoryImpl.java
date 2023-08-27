@@ -125,24 +125,24 @@ public class BankAccountRepositoryImpl implements BankAccountRepository {
             statementUpdate.execute();
             connection.commit();
         } catch (Exception e) {
-            log.error("topUpBankAccount()", e);
+            log.error("Exception topUpBankAccount()", e);
             try {
                 connection.rollback();
             } catch (SQLException ex) {
-                log.error("topUpBankAccount().connection.rollback()", ex);
+                log.error("Exception topUpBankAccount().connection.rollback()", ex);
                 log.warn("info: id- " + id + " deposit: " + depositedMoney);
             }
         } finally {
             try {
                 connection.setAutoCommit(true);
             } catch (SQLException e) {
-                log.error("topUpBankAccount().connection.setAutoCommit()", e);
+                log.error("Exception topUpBankAccount().connection.setAutoCommit()", e);
             }
             if (connectionPool != null) {
                 try {
                     connectionPool.closeConnection(connection);
                 } catch (Exception e) {
-                    log.error("Exception (topUpBankAccount(),connectionPool.closeConnection()): ", e);
+                    log.error("Exception topUpBankAccount().connectionPool.closeConnection(): ", e);
                 }
             }
         }

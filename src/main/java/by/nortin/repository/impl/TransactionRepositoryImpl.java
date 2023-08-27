@@ -67,7 +67,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
             Long sendingBankId = getBankIdByName(transaction.getSendingBank(), connection);
             if (sendingBankId == null) {
 //                throw new SQLDataException("Sending bank id not found");
-                throw new SQLDataException(getIdNotFoundMessage("Sending bank"));
+                throw new SQLDataException(getIdNotFoundMessage("Sending bank account"));
             }
             Long recipientBankId;
             if (transaction.getRecipientBank() == null) {
@@ -78,7 +78,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
             }
             if (recipientBankId == null) {
 //                throw new SQLDataException("Recipient bank id not found");
-                throw new SQLDataException(getIdNotFoundMessage("Recipient bank"));
+                throw new SQLDataException(getIdNotFoundMessage("Recipient bank account"));
             }
             Long operationTypeId = getOperationTypeIdByType(transaction.getOperationType(), connection);
             if (operationTypeId == null) {
@@ -109,18 +109,18 @@ public class TransactionRepositoryImpl implements TransactionRepository {
             connection.commit();
         } catch (Exception e) {
             getErrorMessageToUser("Sorry, something wrong");
-            log.error("saveTransaction()", e);
+            log.error("Exception saveTransaction()", e);
             try {
                 connection.rollback();
             } catch (SQLException ex) {
-                log.error("saveTransaction().connection.rollback()", ex);
+                log.error("Exception saveTransaction().connection.rollback()", ex);
             }
         } finally {
             if (connectionPool != null) {
                 try {
                     connectionPool.closeConnection(connection);
                 } catch (Exception e) {
-                    log.error("Exception (saveTransaction(),connectionPool.closeConnection()): ", e);
+                    log.error("Exception saveTransaction().connectionPool.closeConnection(): ", e);
                 }
             }
         }
