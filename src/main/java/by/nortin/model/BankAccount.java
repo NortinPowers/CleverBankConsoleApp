@@ -18,9 +18,10 @@ public class BankAccount extends BaseModel {
     //    private Long id;
     private Long number;
     private BigDecimal balance;
+    private Long currencyId;
     private Currency currency;
     private LocalDate accountOpeningDate;
     private User user;
     private Bank bank;
-    private List<Transactional> transactions;
+    private List<Transaction> transactions;
 }

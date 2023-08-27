@@ -1,6 +1,5 @@
 package by.nortin.dto;
 
-import by.nortin.model.Bank;
 import java.math.BigDecimal;
 import java.util.Currency;
 import lombok.Getter;
@@ -10,8 +9,10 @@ import lombok.Setter;
 @Setter
 public class BankAccountDto {
 
+    private Long id;
     private Long number;
     private BigDecimal balance;
+    private Long currencyId;
     private Currency currency;
-    private Bank bank;
+    private BankDto bankDto;
 }
