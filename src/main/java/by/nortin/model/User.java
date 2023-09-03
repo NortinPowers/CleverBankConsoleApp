@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 public class User extends BaseModel {
 
-    //    private Long id;
     private String passportId;
     private String login;
     private String password;

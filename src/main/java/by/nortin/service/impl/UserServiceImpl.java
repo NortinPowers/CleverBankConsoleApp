@@ -18,21 +18,15 @@ public class UserServiceImpl implements UserService {
         userMapper = (UserMapper) getInstance(UserMapper.class);
     }
 
+    /**
+     * Implementation of the method verifies user authentication.
+     *
+     * @param userDto UserDto
+     * @return boolean result
+     */
     @Override
-//    public boolean checkAuthentication(String login, String password) {
     public boolean checkAuthentication(UserDto userDto) {
-        //test
-//        if ("nortin".equals(login) && "12345".equals(password)) {
-//            return true;
-//        }
-//        return false;
-
-//        User user = new User();
-//        user.setLogin(userDto.getLogin());
-//        user.setPassword(userDto.getPassword());
-
         User user = userMapper.convertToModel(userDto);
-//        return userRepository.checkAuthentication(userDto.getLogin(), userDto.getPassword());
         return userRepository.checkAuthentication(user);
     }
 }

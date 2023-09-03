@@ -4,6 +4,11 @@ import by.nortin.model.User;
 
 public interface UserRepository {
 
-    //    boolean checkAuthentication(String login, String password);
+    /**
+     * The method verifies user authentication.
+     *
+     * @param user User
+     * @return boolean result
+     */
     boolean checkAuthentication(User user);
 }

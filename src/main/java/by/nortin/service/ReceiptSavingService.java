@@ -4,5 +4,10 @@ import by.nortin.dto.TransactionDto;
 
 public interface ReceiptSavingService {
 
-    void saveReceipt(TransactionDto transactionDto);
+    /**
+     * The method generates and saves the receipt.
+     *
+     * @param transactionDto TransactionDto, all info
+     */
+    void saveReceiptTxt(TransactionDto transactionDto);
 }

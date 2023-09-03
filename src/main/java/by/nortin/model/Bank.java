@@ -12,7 +12,6 @@ import lombok.Setter;
 @EqualsAndHashCode(callSuper = true)
 public class Bank extends BaseModel {
 
-    //    private Long id;
     private String name;
     private List<BankAccount> bankAccounts;
 

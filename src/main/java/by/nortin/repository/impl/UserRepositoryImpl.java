@@ -1,5 +1,9 @@
 package by.nortin.repository.impl;
 
+import static by.nortin.util.Constants.MethodName.CHECK_AUTHENTICATION;
+import static by.nortin.util.Constants.MethodName.CLOSE_CONNECTION;
+import static by.nortin.util.MessageUtils.getErrorMessageToLog;
+
 import by.nortin.model.User;
 import by.nortin.repository.ConnectionPool;
 import by.nortin.repository.UserRepository;
@@ -20,30 +24,32 @@ public class UserRepositoryImpl implements UserRepository {
         connection = null;
     }
 
+    /**
+     * Implementation of the method verifies user authentication.
+     *
+     * @param user User
+     * @return boolean result
+     */
     @Override
-//    public boolean checkAuthentication(String login, String password) {
     public boolean checkAuthentication(User user) {
         boolean isPresent = false;
-//        Connection connection = null;
         try {
             connection = connectionPool.getConnection();
             PreparedStatement statement = connection.prepareStatement(GET_USER_BY_LOGIN_AND_PASSWORD);
             statement.setString(1, user.getLogin());
-//            statement.setString(1, login);
             statement.setString(2, user.getPassword());
-//            statement.setString(2, password);
             ResultSet resultSet = statement.executeQuery();
             while (resultSet.next()) {
                 isPresent = true;
             }
         } catch (Exception e) {
-            log.error("Exception checkAuthentication()", e);
+            log.error(getErrorMessageToLog(CHECK_AUTHENTICATION), e);
         } finally {
             if (connectionPool != null) {
                 try {
                     connectionPool.closeConnection(connection);
                 } catch (Exception e) {
-                    log.error("Exception checkAuthentication().connectionPool.closeConnection(): ", e);
+                    log.error(getErrorMessageToLog(CHECK_AUTHENTICATION, CLOSE_CONNECTION), e);
                 }
             }
         }

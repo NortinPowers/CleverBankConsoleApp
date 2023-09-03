@@ -1,5 +1,9 @@
 package by.nortin.repository.impl;
 
+import static by.nortin.util.Constants.MethodName.CLOSE_CONNECTION;
+import static by.nortin.util.Constants.MethodName.GET_ALL;
+import static by.nortin.util.MessageUtils.getErrorMessageToLog;
+
 import by.nortin.model.Bank;
 import by.nortin.repository.BankRepository;
 import by.nortin.repository.ConnectionPool;
@@ -22,6 +26,11 @@ public class BankRepositoryImpl implements BankRepository {
         connection = null;
     }
 
+    /**
+     * Implementation of the method returns a list of all banks.
+     *
+     * @return List of Bank
+     */
     @Override
     public List<Bank> getAll() {
         List<Bank> banks = new ArrayList<>();
@@ -38,13 +47,13 @@ public class BankRepositoryImpl implements BankRepository {
                 banks.add(bank);
             }
         } catch (Exception e) {
-            log.error("Exception getAll()", e);
+            log.error(getErrorMessageToLog(GET_ALL), e);
         } finally {
             if (connectionPool != null) {
                 try {
                     connectionPool.closeConnection(connection);
                 } catch (Exception e) {
-                    log.error("Exception checkAuthentication().connectionPool.closeConnection(): ", e);
+                    log.error(getErrorMessageToLog(GET_ALL, CLOSE_CONNECTION), e);
                 }
             }
         }

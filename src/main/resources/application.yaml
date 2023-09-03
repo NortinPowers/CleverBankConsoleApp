@@ -1,6 +1,3 @@
-server:
-  port: 8080
-
 database:
   url: jdbc:postgresql://localhost:5432/clever_bank
   username: postgres
@@ -9,4 +6,5 @@ database:
   max-connection: 30
   min-connection: 10
 
-profiles: en
+bank:
+  interestRate: 1

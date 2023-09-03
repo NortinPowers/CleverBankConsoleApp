@@ -6,7 +6,6 @@ import by.nortin.mapper.BankMapper;
 import by.nortin.mapper.TransactionMapper;
 import by.nortin.model.Transaction;
 import by.nortin.util.InjectObjectsFactory;
-import by.nortin.util.MapperUtils;
 import org.modelmapper.ModelMapper;
 
 public class TransactionMapperImpl implements TransactionMapper {
@@ -21,10 +20,39 @@ public class TransactionMapperImpl implements TransactionMapper {
         modelMapper = (ModelMapper) InjectObjectsFactory.getInstance(ModelMapper.class);
     }
 
+    /**
+     * Implementation of a method that converts the Transaction object to the TransactionDto object.
+     *
+     * @param transaction - object to convert
+     * @return TransactionDto object
+     */
     @Override
     public TransactionDto convertToDto(Transaction transaction) {
-//        TransactionDto transactionDto = new TransactionDto();
         TransactionDto transactionDto = modelMapper.map(transaction, TransactionDto.class);
+        fillFieldsOfDtoIfEmpty(transaction, transactionDto);
+        return transactionDto;
+    }
+
+    /**
+     * Implementation of a method that converts the TransactionDto object to the Transaction object.
+     *
+     * @param transactionDto - object to convert
+     * @return Transaction object
+     */
+    @Override
+    public Transaction convertToModel(TransactionDto transactionDto) {
+        Transaction transaction = modelMapper.map(transactionDto, Transaction.class);
+        fillFieldsOfModelIfEmpty(transactionDto, transaction);
+        return transaction;
+    }
+
+    /**
+     * The method assigns the appropriate value to the recipient's fields if they are empty.
+     *
+     * @param transaction    - object source of values
+     * @param transactionDto - value recipient object
+     */
+    private void fillFieldsOfDtoIfEmpty(Transaction transaction, TransactionDto transactionDto) {
         if (transaction.getRecipientBank() != null) {
             transactionDto.setRecipientBankDto(bankMapper.convertToDto(transaction.getRecipientBank()));
         }
@@ -37,14 +65,15 @@ public class TransactionMapperImpl implements TransactionMapper {
         if (transaction.getSendingBankAccount() != null) {
             transactionDto.setSendingBankAccountDto(bankAccountMapper.convertToDto(transaction.getSendingBankAccount()));
         }
-//        return MapperUtils.setValue(transaction, transactionDto);
-        return transactionDto;
     }
 
-    @Override
-    public Transaction convertToModel(TransactionDto transactionDto) {
-//        Transaction transaction = new Transaction();
-        Transaction transaction = modelMapper.map(transactionDto, Transaction.class);
+    /**
+     * The method assigns the appropriate value to the recipient's fields if they are empty.
+     *
+     * @param transactionDto - object source of values
+     * @param transaction    - value recipient object
+     */
+    private void fillFieldsOfModelIfEmpty(TransactionDto transactionDto, Transaction transaction) {
         if (transactionDto.getRecipientBankDto() != null) {
             transaction.setRecipientBank(bankMapper.convertToModel(transactionDto.getRecipientBankDto()));
         }
@@ -57,7 +86,5 @@ public class TransactionMapperImpl implements TransactionMapper {
         if (transactionDto.getSendingBankAccountDto() != null) {
             transaction.setSendingBankAccount(bankAccountMapper.convertToModel(transactionDto.getSendingBankAccountDto()));
         }
-//        return MapperUtils.setValue(transactionDto, transaction);
-        return transaction;
     }
 }

@@ -1,10 +1,12 @@
 package by.nortin.service;
 
 import by.nortin.dto.BankAccountDto;
+import by.nortin.dto.BankDto;
+import by.nortin.dto.TransactionDto;
 import java.math.BigDecimal;
 import java.util.List;
 
-public interface BankAccountService {
+public interface OperationManagerService {
 
     /**
      * The method returns a list of the user's bank account.
@@ -23,6 +25,28 @@ public interface BankAccountService {
      * @return BigDecimal
      */
     BigDecimal changeBankAccountBalance(Long bankAccountNumber, BigDecimal money, boolean replenishment);
+
+    /**
+     * The method returns a list of all banks.
+     *
+     * @return List of BankDto
+     */
+    List<BankDto> getAll();
+
+    /**
+     * The method generates and saves the receipt.
+     *
+     * @param transactionDto TransactionDto, all info
+     */
+    void saveReceiptTxt(TransactionDto transactionDto);
+
+    /**
+     * The method save the user transactionDto and returns the modified transactionDto.
+     *
+     * @param transactionDto TransactionDto
+     * @return modified transactionDto
+     */
+    TransactionDto saveTransaction(TransactionDto transactionDto);
 
     /**
      * The method transports money between 2 bank accounts.
@@ -50,18 +74,4 @@ public interface BankAccountService {
      * @return BankAccount
      */
     BankAccountDto getUserBankAccountByNumberForSpecificBank(Long number, String name);
-
-    /**
-     * The method returns all users' bank accounts of Clever-Bank.
-     *
-     * @return List of BankAccountDto
-     */
-    List<BankAccountDto> findAll();
-
-    /**
-     * The method updates the account balance and the service date of the bank account.
-     *
-     * @param bankAccountDto BankAccountDto
-     */
-    void save(BankAccountDto bankAccountDto);
 }

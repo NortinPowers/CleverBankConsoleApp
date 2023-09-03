@@ -1,19 +1,14 @@
 package by.nortin.service;
 
 import by.nortin.dto.TransactionDto;
-import by.nortin.model.OperationType;
-import java.math.BigDecimal;
 
 public interface TransactionService {
 
-//    TransactionDto saveTransaction(
-//            OperationType operationType,
-//            String recipientBank,
-//            String sendingBank,
-//            Long recipientBankAccount,
-//            Long sendingBankAccount,
-//            BigDecimal depositedMoney);
-
-//    void saveTransaction(TransactionDto transactionDto);
+    /**
+     * The method save the user transactionDto and returns the modified transactionDto.
+     *
+     * @param transactionDto TransactionDto
+     * @return modified transactionDto
+     */
     TransactionDto saveTransaction(TransactionDto transactionDto);
 }

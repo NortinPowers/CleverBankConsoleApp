@@ -18,6 +18,11 @@ public class BankServiceImpl implements BankService {
         bankMapper = (BankMapper) getInstance(BankMapper.class);
     }
 
+    /**
+     * Implementation of the method returns a list of all banks.
+     *
+     * @return List of BankDto
+     */
     @Override
     public List<BankDto> getAll() {
         return bankRepository.getAll().stream()

@@ -15,28 +15,12 @@ dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.28'
     annotationProcessor 'org.projectlombok:lombok:1.18.28'
     implementation 'org.postgresql:postgresql:42.6.0'
-    implementation 'org.flywaydb:flyway-core:9.21.1'
     implementation 'org.apache.logging.log4j:log4j-core:2.20.0'
     implementation 'org.yaml:snakeyaml:2.1'
-//    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
-//    annotationProcessor 'org.mapstruct:mapstruct:1.5.5.Final'
     implementation 'org.modelmapper:modelmapper:3.1.1'
-//    implementation 'com.itextpdf:itextpdf:5.5.13.3'
     implementation 'org.apache.pdfbox:pdfbox:3.0.0'
-
-
-
-
-}
-
-tasks.register('run', JavaExec) {
-    classpath = sourceSets.main.runtimeClasspath
-    doFirst {
-        def config = yaml.load(new File('src/main/resources/application.yaml').text)
-        config.each { key, value ->
-            System.setProperty(key, value.toString())
-        }
-    }
+    testImplementation 'org.mockito:mockito-core:5.5.0'
+    testImplementation 'org.mockito:mockito-junit-jupiter:5.5.0'
 }
 
 test {

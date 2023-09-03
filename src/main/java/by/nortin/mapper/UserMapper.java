@@ -3,9 +3,13 @@ package by.nortin.mapper;
 import by.nortin.dto.UserDto;
 import by.nortin.model.User;
 
-//@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface UserMapper {
 
-//    UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
+    /**
+     * The method converts the UserDto object to the User object.
+     *
+     * @param userDto - object to convert
+     * @return User object
+     */
     User convertToModel(UserDto userDto);
 }

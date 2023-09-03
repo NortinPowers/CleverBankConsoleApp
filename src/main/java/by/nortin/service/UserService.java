@@ -4,6 +4,11 @@ import by.nortin.dto.UserDto;
 
 public interface UserService {
 
-    //    boolean checkAuthentication(String login, String password);
+    /**
+     * The method verifies user authentication.
+     *
+     * @param userDto UserDto
+     * @return boolean result
+     */
     boolean checkAuthentication(UserDto userDto);
 }

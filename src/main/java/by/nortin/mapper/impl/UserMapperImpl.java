@@ -4,7 +4,6 @@ import by.nortin.dto.UserDto;
 import by.nortin.mapper.UserMapper;
 import by.nortin.model.User;
 import by.nortin.util.InjectObjectsFactory;
-import by.nortin.util.MapperUtils;
 import org.modelmapper.ModelMapper;
 
 public class UserMapperImpl implements UserMapper {
@@ -15,17 +14,14 @@ public class UserMapperImpl implements UserMapper {
         modelMapper = (ModelMapper) InjectObjectsFactory.getInstance(ModelMapper.class);
     }
 
+    /**
+     * Implementation of a method that converts the UserDto object to the User object.
+     *
+     * @param userDto - object to convert
+     * @return User object
+     */
     @Override
     public User convertToModel(UserDto userDto) {
-//        User user = new User();
-//        if (userDto.getLogin() != null) {
-//            user.setLogin(userDto.getLogin());
-//        }
-//        if (userDto.getPassword() != null) {
-//            user.setPassword(userDto.getPassword());
-//        }
-//        return user;
-//        return MapperUtils.setValue(userDto, user);
         return modelMapper.map(userDto, User.class);
     }
 }

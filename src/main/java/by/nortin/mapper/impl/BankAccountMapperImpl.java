@@ -17,38 +17,33 @@ public class BankAccountMapperImpl implements BankAccountMapper {
         modelMapper = (ModelMapper) InjectObjectsFactory.getInstance(ModelMapper.class);
     }
 
+    /**
+     * Implementation of a method that converts the BankAccount object to the bankAccountDto object.
+     *
+     * @param bankAccount - object to convert
+     * @return BankAccountDto object
+     */
     @Override
     public BankAccountDto convertToDto(BankAccount bankAccount) {
-//        BankAccountDto bankAccountDto = new BankAccountDto();
         BankAccountDto bankAccountDto = modelMapper.map(bankAccount, BankAccountDto.class);
         if (bankAccount.getBank() != null) {
             bankAccountDto.setBankDto(bankMapper.convertToDto(bankAccount.getBank()));
         }
-//        if (bankAccount.getNumber() != null) {
-//            bankAccountDto.setNumber(bankAccount.getNumber());
-//        }
-//        if (bankAccount.getBalance() != null) {
-//            bankAccountDto.setBalance(bankAccount.getBalance());
-//        }
-//        if (bankAccount.getCurrency() != null) {
-//            bankAccountDto.setCurrency(bankAccount.getCurrency());
-//        }
-//        if (bankAccount.getBank() != null) {
-//            bankAccountDto.setBank(bankAccount.getBank());
-//        }
-//        return bankAccountDto;
-//        return MapperUtils.setValue(bankAccount, bankAccountDto);
         return bankAccountDto;
     }
 
+    /**
+     * Implementation of a method that converts the BankAccountDto object to the bankAccount object.
+     *
+     * @param bankAccountDto - object to convert
+     * @return BankAccount object
+     */
     @Override
     public BankAccount convertToModel(BankAccountDto bankAccountDto) {
-//        BankAccount bankAccount = new BankAccount();
         BankAccount bankAccount = modelMapper.map(bankAccountDto, BankAccount.class);
         if (bankAccountDto.getBankDto() != null) {
             bankAccount.setBank(bankMapper.convertToModel(bankAccountDto.getBankDto()));
         }
-//        return MapperUtils.setValue(bankAccountDto, bankAccount);
         return bankAccount;
     }
 }

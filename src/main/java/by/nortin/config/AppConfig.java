@@ -16,6 +16,9 @@ public class AppConfig {
         loadConfig();
     }
 
+    /**
+     * The method reads the yaml file in config Map.
+     */
     private void loadConfig() {
         try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(CONFIG_FILE)) {
             Yaml yaml = new Yaml();
@@ -25,12 +28,13 @@ public class AppConfig {
         }
     }
 
+    /**
+     * The method returns a value by its key.
+     *
+     * @param key - the key of the read value
+     * @return Map of String - Object
+     */
     public Map<String, Object> getProperty(String key) {
         return config.get(key);
     }
-
-//    public Map<String, Object> getConfig() {
-//        return config;
-//    }
-
 }

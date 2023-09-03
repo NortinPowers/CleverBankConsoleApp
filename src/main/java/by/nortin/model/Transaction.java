@@ -10,7 +10,6 @@ import lombok.Setter;
 @Setter
 public class Transaction extends BaseModel {
 
-    //    private Long id;
     private LocalDateTime date;
     private Long currencyId;
     private Currency currency;

@@ -1,15 +1,23 @@
 package by.nortin.mapper;
 
 import by.nortin.dto.BankAccountDto;
-import by.nortin.dto.BankDto;
-import by.nortin.model.Bank;
 import by.nortin.model.BankAccount;
 
-//@Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface BankAccountMapper {
 
-//    BankAccountMapper INSTANCE = Mappers.getMapper(BankAccountMapper.class);
+    /**
+     * The method converts the BankAccount object to the bankAccountDto object.
+     *
+     * @param bankAccount - object to convert
+     * @return BankAccountDto object
+     */
     BankAccountDto convertToDto(BankAccount bankAccount);
 
+    /**
+     * The method converts the BankAccountDto object to the bankAccount object.
+     *
+     * @param bankAccountDto - object to convert
+     * @return BankAccount object
+     */
     BankAccount convertToModel(BankAccountDto bankAccountDto);
 }

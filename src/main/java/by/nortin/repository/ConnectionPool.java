@@ -1,5 +1,7 @@
 package by.nortin.repository;
 
+import static by.nortin.util.MessageUtils.getErrorMessageToLog;
+
 import by.nortin.config.AppConfig;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -15,10 +17,6 @@ public final class ConnectionPool {
 
     private static volatile ConnectionPool instance;
     private static final AppConfig APP_CONFIG;
-    //    private static final String DB_PROPERTY_FILE = "application.yaml";
-//    private static final String DB_URL = "database.url";
-//    private static final String DB_LOGIN = "database.username";
-//    private static final String DB_PASS = "database.password";
     private static final int MAX_CONNECTION_COUNT;
     private static final int MIN_CONNECTION_COUNT;
 
@@ -27,17 +25,7 @@ public final class ConnectionPool {
     private static final String PASS;
 
     static {
-//        ResourceBundle resourceBundle = ResourceBundle.getBundle(DB_PROPERTY_FILE, Locale.getDefault());
-//        URL = resourceBundle.getString(DB_URL);
-//        LOGIN = resourceBundle.getString(DB_LOGIN);
-//        PASS = resourceBundle.getString(DB_PASS);
-
-//        URL = "jdbc:postgresql://localhost:5434/clever_bank";
-//        LOGIN = "postgres";
-//        PASS = "root";
-
         APP_CONFIG = new AppConfig();
-//        Map<String, Object> config = APP_CONFIG.getConfig();
         Map<String, Object> databaseProperties = APP_CONFIG.getProperty("database");
         URL = (String) databaseProperties.get("url");
         LOGIN = (String) databaseProperties.get("username");
@@ -49,16 +37,24 @@ public final class ConnectionPool {
     private final AtomicInteger currentConnectionNumber = new AtomicInteger(MIN_CONNECTION_COUNT);
     private final BlockingQueue<Connection> pool = new ArrayBlockingQueue<>(MAX_CONNECTION_COUNT, true);
 
+    /**
+     * The method creates a connection pool of connection.
+     */
     private ConnectionPool() {
         for (int i = 0; i < MIN_CONNECTION_COUNT; i++) {
             try {
                 pool.add(DriverManager.getConnection(URL, LOGIN, PASS));
             } catch (SQLException e) {
-                log.error("Exception (ConnectionPool()): ", e);
+                log.error(getErrorMessageToLog("ConnectionPool()"), e);
             }
         }
     }
 
+    /**
+     * The method creates additional connections.
+     *
+     * @throws Exception error adding connection
+     */
     private void openAdditionalConnection() throws Exception {
         try {
             pool.add(DriverManager.getConnection(URL, LOGIN, PASS));
@@ -68,6 +64,11 @@ public final class ConnectionPool {
         }
     }
 
+    /**
+     * The method returns the instance of connection pool.
+     *
+     * @return instance of ConnectionPool
+     */
     public static ConnectionPool getInstance() {
         if (instance == null) {
             synchronized (ConnectionPool.class) {
@@ -79,6 +80,12 @@ public final class ConnectionPool {
         return instance;
     }
 
+    /**
+     * The method returns connections from the connection pool.
+     *
+     * @return Connection
+     * @throws Exception the maximum number of connections has been reached
+     */
     public Connection getConnection() throws Exception {
         Connection connection;
         try {
@@ -94,6 +101,12 @@ public final class ConnectionPool {
         return connection;
     }
 
+    /**
+     * The method closes the connection and returns it to the connection pool.
+     *
+     * @param connection Connection
+     * @throws Exception it is possible to return the connections to the connection pool
+     */
     public void closeConnection(Connection connection) throws Exception {
         if (connection != null) {
             if (currentConnectionNumber.get() > MIN_CONNECTION_COUNT) {
@@ -108,6 +121,9 @@ public final class ConnectionPool {
         }
     }
 
+    /**
+     * The method closes all active connections.
+     */
     public void closeAllConnection() {
         for (Connection connection : pool) {
             try {
@@ -115,7 +131,7 @@ public final class ConnectionPool {
                     connection.close();
                 }
             } catch (Exception e) {
-                log.error("Some connection cannot be closed ", e);
+                log.error(getErrorMessageToLog("Some connection cannot be closed"), e);
             }
         }
     }
